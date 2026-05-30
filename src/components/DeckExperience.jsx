@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import DeckCard from './DeckCard';
 import FinalScene from './FinalScene';
@@ -13,11 +13,6 @@ export default function DeckExperience() {
   const activeCard = deckCards[activeIndex];
   const isOpened = openedCards.includes(activeCard.id);
   const completed = openedCards.length === deckCards.length;
-
-  const status = useMemo(() => {
-    if (completed) return 'Collection complete';
-    return `${String(openedCards.length).padStart(2, '0')} / ${String(deckCards.length).padStart(2, '0')} unlocked`;
-  }, [completed, openedCards.length]);
 
   const openCard = () => {
     setOpenedCards((current) => (current.includes(activeCard.id) ? current : [...current, activeCard.id]));
@@ -69,8 +64,21 @@ export default function DeckExperience() {
                 >
                   THE DECK OF INDHU
                 </button>
-                <div className="deck-status">
-                  <span>{status}</span>
+                <div className="deck-status" aria-label="Deck symbol sequence">
+                  {deckCards.map((card, index) => {
+                    const unlocked = openedCards.includes(card.id);
+                    const active = activeIndex === index;
+
+                    return (
+                      <span
+                        key={card.id}
+                        className={`sequence-symbol ${active ? 'is-current' : ''} ${unlocked ? 'is-lit' : ''}`}
+                        style={{ '--accent': card.accent, '--glow': card.glow }}
+                      >
+                        {card.symbol}
+                      </span>
+                    );
+                  })}
                 </div>
               </header>
 
@@ -113,10 +121,10 @@ export default function DeckExperience() {
                         disabled={!unlocked}
                         onClick={() => revisit(index)}
                         className={`index-card ${active ? 'is-active' : ''} ${unlocked ? 'is-unlocked' : ''}`}
-                        style={{ '--accent': card.accent }}
+                        style={{ '--accent': card.accent, '--glow': card.glow }}
                       >
-                        <span>{unlocked ? card.number : '???'}</span>
-                        <strong>{unlocked ? card.title : 'SEALED'}</strong>
+                        <span className="index-symbol">{card.symbol}</span>
+                        {unlocked && <strong>{card.title}</strong>}
                       </button>
                     );
                   })}
@@ -124,7 +132,7 @@ export default function DeckExperience() {
               </div>
 
               <footer className="deck-footer">
-                <span>Open the current card to unlock the next chapter.</span>
+                <span>{activeCard.symbol} is the current artifact.</span>
                 <button
                   type="button"
                   className="complete-button"

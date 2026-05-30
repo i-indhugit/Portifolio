@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
 
 const assembly = [
-  { label: 'Skills', className: 'slot-skills', accent: '#7DD3FC' },
-  { label: 'Projects', className: 'slot-projects', accent: '#D4AF37' },
-  { label: 'AI', className: 'slot-ai', accent: '#C084FC' },
-  { label: 'Origin', className: 'slot-origin', accent: '#B8B8B8' },
-  { label: 'Achievements', className: 'slot-achievements', accent: '#FBBF24' },
+  { label: 'Skills', symbol: '✧', className: 'slot-skills', accent: '#C084FC' },
+  { label: 'Projects', symbol: '⬢', className: 'slot-projects', accent: '#D4AF37' },
+  { label: 'AI', symbol: '☾', className: 'slot-ai', accent: '#D4AF37' },
+  { label: 'Origin', symbol: '◉', className: 'slot-origin', accent: '#60A5FA' },
+  { label: 'Achievements', symbol: '🏆', className: 'slot-achievements', accent: '#C084FC' },
 ];
 
 export default function FinalScene({ onRestart }) {
@@ -28,7 +28,7 @@ export default function FinalScene({ onRestart }) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.7, delay: index * 0.12, ease: 'easeOut' }}
           >
-            <span>{String(index + 1).padStart(3, '0')}</span>
+            <span>{item.symbol}</span>
             <strong>{item.label}</strong>
           </motion.div>
         ))}

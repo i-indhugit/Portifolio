@@ -7,6 +7,11 @@ const rarityColor = {
   Epic: '#C084FC',
   Rare: '#60A5FA',
   Common: '#A1A1AA',
+  LEGENDARY: '#D4AF37',
+  EPIC: '#C084FC',
+  RARE: '#60A5FA',
+  COMMON: '#A1A1AA',
+  MYTHIC: '#F8E7A1',
 };
 
 const jokerAnswers = {
@@ -67,55 +72,96 @@ export default function DeckCard({ card, isOpened, onOpen, onContinue, isLast, c
     setChat((history) => [...history, { role: 'user', text: prompt }, { role: 'ai', text: jokerAnswers[prompt] }]);
   };
 
+  const skillPanelSide = card.type === 'constellation' ? getSkillPanelSide(selectedSkill) : 'right';
+
   return (
-    <div className="card-perspective">
-      <motion.article
-        className={`premium-card ${isOpened ? 'is-open' : 'is-closed'} ${card.personality === 'pride' ? 'shimmer-card' : ''}`}
-        style={{ '--accent': card.accent, '--glow': card.glow }}
-        animate={{ rotateY: isOpened ? 180 : 0, ...personality }}
-        transition={transition}
-        whileHover={!isOpened ? { y: -10, rotate: card.personality === 'powerful' ? 0 : 2 } : undefined}
-        whileTap={!isOpened ? { scale: 0.985 } : undefined}
-        onMouseMove={handleMove}
-        onMouseLeave={() => setTilt({ x: 0, y: 0 })}
-      >
-        <section className="card-face card-front" aria-label={`${card.title} card front`}>
-          <div className="card-corner">{card.number}</div>
-          <div className="front-center">
-            <span className="front-number">{card.type === 'joker' && !isOpened ? '???' : card.number}</span>
-            <span className="accent-line" />
-          </div>
-          <button type="button" className="open-card-button" onClick={onOpen}>
-            {card.type === 'joker' ? 'Disturb card' : 'Open card'}
-          </button>
-        </section>
+    <div className="card-with-detail">
+      <div className="card-perspective">
+        <motion.article
+          className={`premium-card ${isOpened ? 'is-open' : 'is-closed'} ${card.personality === 'pride' ? 'shimmer-card' : ''}`}
+          data-rarity={card.rarity}
+          style={{ '--accent': card.accent, '--glow': card.glow }}
+          animate={{ rotateY: isOpened ? 180 : 0, ...personality }}
+          transition={transition}
+          whileHover={!isOpened ? { y: -10, rotate: card.personality === 'powerful' ? 0 : 2 } : undefined}
+          whileTap={!isOpened ? { scale: 0.985 } : undefined}
+          onMouseMove={handleMove}
+          onMouseLeave={() => setTilt({ x: 0, y: 0 })}
+        >
+          <section className="card-face card-front" aria-label={`${card.title} card front`}>
+            <div className="front-center">
+              <span className="front-symbol">{card.symbol}</span>
+              <span className="accent-line" />
+            </div>
+            <button type="button" className="open-card-button" onClick={onOpen} aria-label={`Open ${card.title}`}>
+              <span className="sr-only">{card.type === 'joker' ? 'Disturb card' : 'Open card'}</span>
+            </button>
+          </section>
 
-        <section className="card-face card-back" aria-label={`${card.title} card back`}>
-          <div className="card-back-header">
-            <span>{card.number}</span>
-            <strong>{card.title}</strong>
-          </div>
+          <section className="card-face card-back" aria-label={`${card.title} card back`}>
+            <div className="card-back-header">
+              <span>{card.symbol}</span>
+              <div>
+                <small>{card.rarity}</small>
+                <strong>{card.title}</strong>
+              </div>
+            </div>
 
-          <div className="card-content">
-            {card.type === 'hero' && <PlayerCard card={card} />}
-            {card.type === 'timeline' && <OriginCard timeline={card.timeline} />}
-            {card.type === 'statement' && <MissionCard statement={card.statement} />}
-            {card.type === 'constellation' && (
-              <SkillsCard skills={card.skills} selectedSkill={selectedSkill} onSelect={setSelectedSkill} />
-            )}
-            {card.type === 'projects' && <ProjectsCard projects={card.projects} />}
-            {card.type === 'vault' && <VaultCard items={card.certifications} />}
-            {card.type === 'achievements' && <AchievementsCard items={card.achievements} />}
-            {card.type === 'dashboard' && <GithubCard card={card} />}
-            {card.type === 'joker' && <JokerCard prompts={card.prompts} chat={chat} onAsk={ask} />}
-          </div>
+            <div className="card-content">
+              {card.type === 'hero' && <PlayerCard card={card} />}
+              {card.type === 'timeline' && <OriginCard timeline={card.timeline} />}
+              {card.type === 'statement' && <MissionCard statement={card.statement} />}
+              {card.type === 'constellation' && (
+                <SkillsCard skills={card.skills} selectedSkill={selectedSkill} onSelect={setSelectedSkill} />
+              )}
+              {card.type === 'projects' && <ProjectsCard projects={card.projects} />}
+              {card.type === 'vault' && <VaultCard items={card.certifications} />}
+              {card.type === 'achievements' && <AchievementsCard items={card.achievements} />}
+              {card.type === 'dashboard' && <GithubCard card={card} />}
+              {card.type === 'joker' && <JokerCard prompts={card.prompts} chat={chat} onAsk={ask} />}
+              {card.type === 'artifact' && <ArtifactCard card={card} />}
+            </div>
 
-          <button type="button" className="continue-button" onClick={onContinue}>
-            {isLast ? (completed ? 'Complete deck' : 'Keep card') : 'Next card'}
-          </button>
-        </section>
-      </motion.article>
+            <button type="button" className="continue-button" onClick={onContinue}>
+              {isLast ? (completed ? 'Complete deck' : 'Keep card') : 'Next card'}
+            </button>
+          </section>
+        </motion.article>
+      </div>
+
+      {card.type === 'constellation' && isOpened && (
+        <motion.aside
+          key={selectedSkill}
+          className={`external-skill-detail ${skillPanelSide === 'left' ? 'is-left' : 'is-right'}`}
+          style={{ '--accent': card.accent, '--glow': card.glow }}
+          initial={{ opacity: 0, x: skillPanelSide === 'left' ? 18 : -18, scale: 0.96 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          transition={{ duration: 0.42, ease: 'easeOut' }}
+        >
+          <span>Selected skill</span>
+          <strong>{selectedSkill}</strong>
+          <p>{skillDetails[selectedSkill]}</p>
+        </motion.aside>
+      )}
     </div>
+  );
+}
+
+function ArtifactCard({ card }) {
+  return (
+    <motion.div className="artifact-card" initial="hidden" animate="show" variants={stagger}>
+      <motion.div className="artifact-symbol" variants={fadeLine}>
+        {card.symbol}
+      </motion.div>
+      <motion.h2 variants={fadeLine}>{card.artifact.headline}</motion.h2>
+      <div className="artifact-lines">
+        {card.artifact.lines.map((line) => (
+          <motion.p key={line} variants={fadeLine}>
+            {line}
+          </motion.p>
+        ))}
+      </div>
+    </motion.div>
   );
 }
 
@@ -187,10 +233,6 @@ function SkillsCard({ skills, selectedSkill, onSelect }) {
           {skill}
         </button>
       ))}
-      <div className="skill-detail">
-        <strong>{selectedSkill}</strong>
-        <p>{skillDetails[selectedSkill]}</p>
-      </div>
     </div>
   );
 }
@@ -342,4 +384,9 @@ function ambientDuration(personality) {
   };
 
   return durations[personality] || 4;
+}
+
+function getSkillPanelSide(skill) {
+  const leftSideSkills = new Set(['Machine Learning', 'Data Analytics', 'Google Colab']);
+  return leftSideSkills.has(skill) ? 'left' : 'right';
 }
