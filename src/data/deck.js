@@ -9,5 +9,5 @@ export const deckCards = [
   { id: 'github', symbol: '⌘', title: 'COMMAND CENTER', rarity: 'EPIC' },
   { id: 'innovation', symbol: '⚙', title: 'INNOVATION LAB', rarity: 'RARE' },
   { id: 'joker', symbol: '☾', title: 'JOKER AI', rarity: 'LEGENDARY' },
-  { id: 'future', symbol: '∞', title: 'FUTURE VISION', rarity: 'MYTHIC' },
+  { id: 'contact', symbol: '✉', title: 'HIRE INDHU', rarity: 'MYTHIC' },
 ];

@@ -117,9 +117,10 @@ export default function DeckCard({ card, isOpened, onOpen, onContinue, isLast, c
               {card.type === 'projects' && <ProjectsCard projects={card.projects} />}
               {card.type === 'vault' && <VaultCard items={card.certifications} />}
               {card.type === 'achievements' && <AchievementsCard items={card.achievements} />}
-              {card.type === 'dashboard' && <GithubCard card={card} />}
-              {card.type === 'joker' && <JokerCard prompts={card.prompts} chat={chat} onAsk={ask} />}
-              {card.type === 'artifact' && <ArtifactCard card={card} />}
+            {card.type === 'dashboard' && <GithubCard card={card} />}
+            {card.type === 'joker' && <JokerCard prompts={card.prompts} chat={chat} onAsk={ask} />}
+            {card.type === 'artifact' && <ArtifactCard card={card} />}
+            {card.type === 'contact' && <ContactCard card={card} />}
             </div>
 
             <button type="button" className="continue-button" onClick={onContinue}>
@@ -161,6 +162,27 @@ function ArtifactCard({ card }) {
           </motion.p>
         ))}
       </div>
+    </motion.div>
+  );
+}
+
+function ContactCard({ card }) {
+  return (
+    <motion.div className="contact-card" initial="hidden" animate="show" variants={stagger}>
+      <motion.div className="contact-sigil" variants={fadeLine}>
+        {card.symbol}
+      </motion.div>
+      <motion.h2 variants={fadeLine}>{card.contact.headline}</motion.h2>
+      <motion.p variants={fadeLine}>{card.contact.role}</motion.p>
+      <motion.div className="contact-panel" variants={fadeLine}>
+        <span>{card.contact.availability}</span>
+        <a href={card.contact.github} target="_blank" rel="noreferrer">
+          GitHub command center
+        </a>
+        <a href={card.contact.resume} download>
+          Download resume
+        </a>
+      </motion.div>
     </motion.div>
   );
 }

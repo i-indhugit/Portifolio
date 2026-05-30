@@ -196,17 +196,20 @@ export const deckCards = [
     prompts: ['Tell me about Indhu', 'Show projects', 'Show skills', 'Show certifications', 'Future goals'],
   },
   {
-    id: 'future',
-    symbol: '∞',
-    title: 'FUTURE VISION',
+    id: 'contact',
+    symbol: '✉',
+    title: 'HIRE INDHU',
     rarity: 'MYTHIC',
     accent: '#F8E7A1',
     glow: 'rgba(248,231,161,0.24)',
-    type: 'artifact',
+    type: 'contact',
     personality: 'powerful',
-    artifact: {
-      headline: 'Systems that learn, assist, and elevate.',
-      lines: ['Human-centered AI', 'Elegant developer tools', 'Intelligent products for the future'],
+    contact: {
+      headline: 'Ready to build intelligent systems.',
+      role: 'Aspiring AI & Software Developer',
+      availability: 'Open to AI, Machine Learning, Analytics, and Software Engineering opportunities.',
+      github: 'https://github.com/i-indhugit',
+      resume: '/resume/Indhu_Priya_Yanamala_Resume.pdf',
     },
   },
 ];
